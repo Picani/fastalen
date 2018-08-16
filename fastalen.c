@@ -32,13 +32,16 @@ unsigned long count_seqs(int fd)
     return nb;
 }
 
-void print_seq(int fd, char delimiter[], bool count)
+void print_seq(int fd, char delimiter[], bool count, size_t *sum)
 {
     unsigned long nb = 0;
     kseq_t *seq;
     seq = kseq_init(fd);
+    size_t size;
     while(kseq_read(seq) >= 0) {
-        printf("%s%s%lu\n", seq->name.s, delimiter, strlen(seq->seq.s));
+        size = strlen(seq->seq.s);
+        printf("%s%s%lu\n", seq->name.s, delimiter, size);
+        *sum += size;
         if(count)
             nb++;
     }
@@ -50,7 +53,7 @@ void print_seq(int fd, char delimiter[], bool count)
 
 
 /* global arg_xxx structs */
-struct arg_lit *help, *version, *tsv, *csv, *count, *count_only;
+struct arg_lit *help, *version, *tsv, *csv, *count, *count_only, *sum;
 struct arg_file *files;
 struct arg_end *end;
 
@@ -65,6 +68,7 @@ int main(int argc, char *argv[])
         csv        = arg_litn("c", "csv", 0, 1, "output as CSV"),
         count      = arg_litn("C", "count", 0, 1, "count the number of sequences"),
         count_only = arg_litn("O", "only-count", 0, 1, "ONLY count the number of sequences"),
+        sum        = arg_litn("s", "sum", 0, 1, "sum the size of the sequences"),
         arg_rem(NULL, ""),
         help       = arg_litn(NULL, "help", 0, 1, "display this help and exit"),
         version    = arg_litn(NULL, "version", 0, 1, "display version info and exit"),
@@ -72,7 +76,7 @@ int main(int argc, char *argv[])
     };
 
     char progname[] = "fastalen";
-    char progversion[] = "1.1";
+    char progversion[] = "1.2";
 
     int nerrors;
     nerrors = arg_parse(argc,argv,argtable);
@@ -105,6 +109,7 @@ int main(int argc, char *argv[])
 
     /* Let's go! */
     int fd;
+    size_t sum_sizes = 0;
     for(int i=0; i < files->count; i++) {
         if(files->count > 1)
             printf("# File %s\n", files->filename[i]);
@@ -127,7 +132,11 @@ int main(int argc, char *argv[])
             else
                 delim = ": ";
 
-            print_seq(fd, delim, count->count);
+            print_seq(fd, delim, count->count, &sum_sizes);
+
+            if(sum->count > 0) {
+              printf("Sum%s%lu\n", delim, sum_sizes);
+            }
         }
 
         close(fd);
