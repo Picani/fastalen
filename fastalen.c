@@ -76,7 +76,9 @@ int main(int argc, char *argv[])
     };
 
     char progname[] = "fastalen";
-    char progversion[] = "1.2";
+    char progversion[] = "1.3";
+    char kseqversion[] = "05MAR2012";
+    char argtable3version[] = "3.0.3";
 
     int nerrors;
     nerrors = arg_parse(argc,argv,argtable);
@@ -93,7 +95,7 @@ int main(int argc, char *argv[])
     /* special case: '--version' takes precedence over error reporting */
     else if (version->count > 0)
     {
-        printf("%s %s\n", progname, progversion);
+        printf("%s %s\nBuilt with\n kseq.h %s\n argtable3 %s\n", progname, progversion, kseqversion, argtable3version);
         exit(EXIT_SUCCESS);
     }
 
