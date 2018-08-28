@@ -33,6 +33,7 @@ Usage
       -c, --csv                 output as CSV
       -C, --count               count the number of sequences
       -O, --only-count          ONLY count the number of sequences
+      -s, --sum                 sum the size of the sequences
                             
       --help                    display this help and exit
       --version                 display version info and exit
