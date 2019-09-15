@@ -47,7 +47,7 @@ void print_seq(int fd, char delimiter[], bool count, size_t *sum)
     }
 
     if(count)
-        printf("%lu\n", nb);
+        printf("Sequences%s%lu\n", delimiter, nb);
     kseq_destroy(seq);
 }
 
