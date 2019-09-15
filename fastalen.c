@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 
     char progname[] = "fastalen";
     char progversion[] = "1.3";
-    char kseqversion[] = "05MAR2012";
+    char kseqversion[] = "19JAN2017 (commit d0b8b55)";
     char argtable3version[] = "3.0.3";
 
     int nerrors;
